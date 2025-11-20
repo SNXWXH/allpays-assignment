@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../components/ui/table';
+} from '../table';
 import type { Payment } from '@/types/payment';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 
