@@ -1,10 +1,12 @@
+import type { PaymentStatusType, PayTypeType } from '@/constants/payment';
+
 export interface Payment {
   paymentCode: string;
   mchtCode: string;
   amount: string;
   currency: string;
-  payType: string;
-  status: string;
+  payType: PayTypeType;
+  status: PaymentStatusType;
   paymentAt: string;
 }
 
