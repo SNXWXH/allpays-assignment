@@ -36,14 +36,24 @@ export function PaymentListPage() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [paymentsRes, statusesRes, devicesRes] = await Promise.all([
+        const results = await Promise.allSettled([
           fetchPayments(),
           fetchPaymentStatuses(),
           fetchPaymentTypes(),
         ]);
-        setPayments(paymentsRes.data);
-        setStatuses(statusesRes.data);
-        setDevices(devicesRes.data);
+
+        if (results[0].status === 'fulfilled')
+          setPayments(results[0].value.data);
+
+        if (results[1].status === 'fulfilled')
+          setStatuses(results[1].value.data);
+
+        if (results[2].status === 'fulfilled')
+          setDevices(results[2].value.data);
+
+        const failedRequests = results.filter((r) => r.status === 'rejected');
+        if (failedRequests.length > 0)
+          console.error('Some requests failed:', failedRequests);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load data');
       } finally {

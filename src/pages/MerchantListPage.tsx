@@ -43,12 +43,20 @@ export function MerchantListPage() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [merchantsRes, statusesRes] = await Promise.all([
+        const results = await Promise.allSettled([
           fetchMerchants(),
           fetchMerchantStatuses(),
         ]);
-        setMerchants(merchantsRes.data);
-        setStatuses(statusesRes.data);
+
+        if (results[0].status === 'fulfilled')
+          setMerchants(results[0].value.data);
+
+        if (results[1].status === 'fulfilled')
+          setStatuses(results[1].value.data);
+
+        const failedRequests = results.filter((r) => r.status === 'rejected');
+        if (failedRequests.length > 0)
+          console.error('Some requests failed:', failedRequests);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load data');
       } finally {
