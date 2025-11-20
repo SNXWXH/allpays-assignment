@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SearchBar } from '@/components/SearchBar';
 import { PaymentTable } from '@/components/PaymentTable';
 import { Pagination } from '@/components/Pagination';
@@ -12,6 +13,7 @@ import type { Payment, PaymentStatus, PaymentType } from '@/types/payment';
 const ITEMS_PER_PAGE = 10;
 
 export function PaymentListPage() {
+  const navigate = useNavigate();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [statuses, setStatuses] = useState<PaymentStatus[]>([]);
   const [devices, setDevices] = useState<PaymentType[]>([]);
@@ -126,7 +128,15 @@ export function PaymentListPage() {
   return (
     <div className='min-h-screen bg-white'>
       <div className='max-w-7xl mx-auto px-4 py-8'>
-        <h1 className='text-3xl font-bold mb-8 text-gray-900'>거래내역 관리</h1>
+        <div className='flex justify-between items-center mb-8'>
+          <h1 className='text-3xl font-bold text-gray-900'>거래내역 관리</h1>
+          <button
+            onClick={() => navigate('/')}
+            className='px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors'
+          >
+            가맹점 관리 &gt;
+          </button>
+        </div>
 
         <SearchBar
           searchCode={searchCode}
