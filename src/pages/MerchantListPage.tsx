@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MerchantSearchBar } from '@/components/ui/merchant/MerchantSearchBar';
-import { MerchantTable } from '@/components/ui/merchant/MerchantTable';
-import { MerchantDetailModal } from '@/components/ui/merchant/MerchantDetailModal';
+import { MerchantSearchBar } from '@/components/merchant/MerchantSearchBar';
+import { MerchantTable } from '@/components/merchant/MerchantTable';
+import { MerchantDetailModal } from '@/components/merchant/MerchantDetailModal';
 import { Pagination } from '@/components/Pagination';
 import {
   fetchMerchants,

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SearchBar } from '@/components/ui/payment/PaymentSearchBar';
-import { PaymentTable } from '@/components/ui/payment/PaymentTable';
+import { SearchBar } from '@/components/payment/PaymentSearchBar';
+import { PaymentTable } from '@/components/payment/PaymentTable';
 import { Pagination } from '@/components/Pagination';
 import {
   fetchPayments,
