@@ -1,6 +1,9 @@
 import { Modal } from '@/components/Modal';
 import type { MerchantDetail } from '@/types/merchant';
-import { formatDateTime } from '@/lib/format';
+import {
+  getDetailStatusBadgeColor,
+  getDetailStatusText,
+} from '@/utils/merchantHelpers';
 
 interface MerchantDetailModalProps {
   isOpen: boolean;
@@ -15,31 +18,6 @@ export function MerchantDetailModal({
   merchantDetail,
   loading,
 }: MerchantDetailModalProps) {
-  const getStatusBadgeColor = (status: string) => {
-    switch (status) {
-      case 'ACTIVE':
-        return 'bg-green-100 text-green-800';
-      case 'INACTIVE':
-        return 'bg-gray-100 text-gray-800';
-      case 'SUSPENDED':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'ACTIVE':
-        return '활성';
-      case 'INACTIVE':
-        return '비활성';
-      case 'SUSPENDED':
-        return '정지';
-      default:
-        return status;
-    }
-  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title='가맹점 상세 정보'>
@@ -71,11 +49,11 @@ export function MerchantDetailModal({
               상태
             </label>
             <span
-              className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeColor(
+              className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getDetailStatusBadgeColor(
                 merchantDetail.status
               )}`}
             >
-              {getStatusText(merchantDetail.status)}
+              {getDetailStatusText(merchantDetail.status)}
             </span>
           </div>
 
@@ -129,7 +107,7 @@ export function MerchantDetailModal({
                   등록일시
                 </label>
                 <p className='text-base text-gray-900'>
-                  {formatDateTime(merchantDetail.registeredAt)}
+                  {merchantDetail.registeredAt}
                 </p>
               </div>
               <div>
@@ -137,7 +115,7 @@ export function MerchantDetailModal({
                   수정일시
                 </label>
                 <p className='text-base text-gray-900'>
-                  {formatDateTime(merchantDetail.updatedAt)}
+                  {merchantDetail.updatedAt}
                 </p>
               </div>
             </div>

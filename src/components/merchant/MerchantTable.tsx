@@ -7,6 +7,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { Merchant } from '@/types/merchant';
+import {
+  getStatusBadgeColor,
+  getStatusText,
+} from '@/utils/merchantHelpers';
 
 interface MerchantTableProps {
   merchants: Merchant[];
@@ -14,35 +18,6 @@ interface MerchantTableProps {
 }
 
 export function MerchantTable({ merchants, onRowClick }: MerchantTableProps) {
-  const getStatusBadgeColor = (status: string) => {
-    switch (status) {
-      case 'READY':
-        return 'bg-gray-100 text-gray-800';
-      case 'ACTIVE':
-        return 'bg-green-100 text-green-800';
-      case 'INACTIVE':
-        return 'bg-gray-100 text-gray-800';
-      case 'CLOSED':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'READY':
-        return '대기';
-      case 'ACTIVE':
-        return '활성';
-      case 'INACTIVE':
-        return '중지';
-      case 'CLOSED':
-        return '폐기';
-      default:
-        return status;
-    }
-  };
 
   if (merchants.length === 0) {
     return (
