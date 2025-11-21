@@ -12,6 +12,7 @@ import type {
   CommonResponse as MerchantCommonResponse,
 } from '@/types/merchant';
 import { formatDateTime } from '@/lib/format';
+import { toast } from '@/hooks/use-toast';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -20,16 +21,35 @@ const api = axios.create({
   timeout: 10000,
 });
 
-const handleApiError = (error: unknown): never => {
+const handleApiError = (error: unknown, context: string): void => {
+  let errorMessage = '알 수 없는 오류가 발생했습니다.';
+
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError<{ message?: string }>;
-    const message =
+    errorMessage =
       axiosError.response?.data?.message ||
       axiosError.message ||
       'API 요청 중 오류가 발생했습니다.';
-    throw new Error(message);
+
+    console.error(`[API Error - ${context}]`, {
+      message: errorMessage,
+      status: axiosError.response?.status,
+      statusText: axiosError.response?.statusText,
+      data: axiosError.response?.data,
+      config: {
+        url: axiosError.config?.url,
+        method: axiosError.config?.method,
+      },
+    });
+  } else {
+    console.error(`[API Error - ${context}]`, error);
   }
-  throw new Error('알 수 없는 오류가 발생했습니다.');
+
+  toast({
+    variant: 'destructive',
+    title: '오류 발생',
+    description: errorMessage,
+  });
 };
 
 export const fetchPayments = async (): Promise<PaymentResponse> => {
@@ -45,7 +65,8 @@ export const fetchPayments = async (): Promise<PaymentResponse> => {
     };
     return formattedData;
   } catch (error) {
-    return handleApiError(error);
+    handleApiError(error, 'fetchPayments');
+    return { data: [], message: '', status: 0 };
   }
 };
 
@@ -58,7 +79,8 @@ export const fetchPaymentStatuses = async (): Promise<
     );
     return response.data;
   } catch (error) {
-    return handleApiError(error);
+    handleApiError(error, 'fetchPaymentStatuses');
+    return { data: [], message: '', status: 0 };
   }
 };
 
@@ -71,7 +93,8 @@ export const fetchPaymentTypes = async (): Promise<
     );
     return response.data;
   } catch (error) {
-    return handleApiError(error);
+    handleApiError(error, 'fetchPaymentTypes');
+    return { data: [], message: '', status: 0 };
   }
 };
 
@@ -88,7 +111,8 @@ export const fetchMerchants = async (): Promise<MerchantResponse> => {
     };
     return formattedData;
   } catch (error) {
-    return handleApiError(error);
+    handleApiError(error, 'fetchMerchants');
+    return { data: [], message: '', status: '' };
   }
 };
 
@@ -110,7 +134,23 @@ export const fetchMerchantDetail = async (
     };
     return formattedData;
   } catch (error) {
-    return handleApiError(error);
+    handleApiError(error, 'fetchMerchantDetail');
+    return {
+      data: {
+        mchtCode: '',
+        mchtName: '',
+        status: '',
+        businessNumber: '',
+        representative: '',
+        phone: '',
+        email: '',
+        address: '',
+        registeredAt: '',
+        updatedAt: '',
+      },
+      message: '',
+      status: '',
+    };
   }
 };
 
@@ -123,6 +163,7 @@ export const fetchMerchantStatuses = async (): Promise<
     );
     return response.data;
   } catch (error) {
-    return handleApiError(error);
+    handleApiError(error, 'fetchMerchantStatuses');
+    return { data: [], message: '', status: '' };
   }
 };
