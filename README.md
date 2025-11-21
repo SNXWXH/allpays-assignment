@@ -1,73 +1,161 @@
-# React + TypeScript + Vite
+# 올페이즈 채용 과제
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 프로젝트 개요
 
-Currently, two official plugins are available:
+결제대행사(PG) 도메인에 적합한 결제 및 가맹점 관리 대시보드를 구현한 프로젝트입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 주요 기능
 
-## React Compiler
+- 가맹점 관리 페이지 (메인 대시보드): 가맹점 목록 조회, 검색, 필터링 및 상세 정보 조회
+- 거래내역 관리 페이지: 결제 거래 내역 조회, 검색, 필터링
+- 가맹점 코드, 이름, 상태별 필터링
+- 결제 코드, 가맹점 코드, 결제 상태, 결제 수단별 필터링
+- 페이지네이션 (페이지당 10개 항목)
+- 반응형 테이블 UI
+- API 오류 토스트 UI
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 기술 스택
 
-## Expanding the ESLint configuration
+### 프레임워크 & 라이브러리
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React**: 19.2.0
+- **TypeScript**: 5.9.3
+- **React Router**: 7.9.6
+- **Axios**: 1.13.2
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 빌드 도구
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Vite**: 7.2.2
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 스타일링
+
+- **Tailwind CSS**: 4.1.17
+- **shadcn/ui**: 오픈소스 UI 컴포넌트 라이브러리
+  - 출처: https://ui.shadcn.com/
+  - 사용 컴포넌트: Table, Toast, Toaster
+  - 커스터마이징: shadcn/ui CLI를 통해 컴포넌트 소스코드를 직접 프로젝트에 복사하여 사용. 테이블 컴포넌트는 가맹점/결제 목록의 데이터 구조에 맞게 컬럼을 구성, 토스트 컴포넌트는 API 에러 핸들링 시 사용자 피드백용으로 활용
+- **스타일링 방식**: Utility-first CSS 방식으로 직접 스타일링 구현
+- **디자인 의도**:
+  - 심플하고 깔끔한 화이트 배경 기반 레이아웃
+  - 결제 도메인에 적합한 정보 중심 인터페이스
+  - 버튼 및 인터랙티브 요소의 명확한 시각적 피드백
+
+## 개발 환경 요구사항
+
+- **Node.js**: 20.x LTS
+- **패키지 매니저**: npm
+
+## 실행 방법
+
+### 1. 의존성 설치
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. 개발 서버 실행
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+로컬 주소: `http://localhost:5173`
+
+## 프로젝트 구조
+
+```
+src/
+├── components/          # 재사용 가능한 UI 컴포넌트
+│   ├── merchant/       # 가맹점 관련 컴포넌트
+│   ├── payment/        # 결제 관련 컴포넌트
+│   ├── ui/             # 공통 UI 컴포넌트
+│   │   ├── table.tsx   # 테이블 컴포넌트
+│   │   ├── toast.tsx   # 토스트 알림 컴포넌트
+│   │   └── toaster.tsx # 토스트 컨테이너
+│   ├── Modal.tsx       # 공통 모달
+│   └── Pagination.tsx  # 페이지네이션
+├── pages/              # 페이지 컴포넌트
+│   ├── MerchantListPage.tsx  # 가맹점 관리 페이지
+│   └── PaymentListPage.tsx   # 거래내역 관리 페이지
+├── hooks/              # 커스텀 훅
+│   └── use-toast.ts    # 토스트 알림 상태 관리 훅
+├── services/           # API 통신 로직
+│   └── api.ts
+├── types/              # TypeScript 타입 정의
+│   ├── merchant.ts
+│   └── payment.ts
+├── constants/          # 상수 정의
+│   ├── merchant.ts
+│   └── payment.ts
+├── utils/              # 유틸리티 함수
+│   ├── merchantHelpers.ts
+│   └── paymentHelpers.ts
+├── lib/                # 라이브러리 함수
+│   ├── format.ts       # 날짜 포맷팅
+│   └── utils.ts        # CSS 유틸리티
+└── App.tsx             # 메인 앱 컴포넌트
+```
+
+## 주요 페이지
+
+### 1. 가맹점 관리 (`/`)
+
+- 가맹점 목록 조회
+- 가맹점 코드 및 이름 검색
+- 가맹점 상태별 필터링 (전체/대기/활성/중지/폐기)
+- 가맹점 상세 정보 모달
+- 페이지네이션
+
+| 가맹점 목록                                                                                                                 | 가맹점 검색                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| <img width="480" alt="가맹점 목록" src="https://github.com/user-attachments/assets/6a9d7a09-5691-44f3-9d4e-5bba36652d58" /> | <img width="480" alt="가맹점 검색" src="https://github.com/user-attachments/assets/c5653cf3-edb0-4957-bd72-87ed5e34d5fc" /> |
+
+### 2. 거래내역 관리 (`/payments`)
+
+- 결제 거래 내역 조회
+- 결제 코드 및 가맹점 코드 검색
+- 결제 상태별 필터링 (전체/결제대기/결제완료/결제취소/결제실패/환불완료)
+- 결제 수단별 필터링 (전체/온라인/단말기/모바일/가상계좌/정기결제)
+- 페이지네이션
+
+| 거래내역 목록                                                                                                                 | 거래내역 검색                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| <img width="480" alt="거래내역 목록" src="https://github.com/user-attachments/assets/280f8746-bb78-407d-8cec-aab5b5f95601" /> | <img width="480" alt="거래내역 검색" src="https://github.com/user-attachments/assets/282622d7-3137-4259-bef6-147e81363765" /> |
+
+## 주요 기술적 구현 사항
+
+### API 통신
+
+- Axios 인스턴스를 활용한 API 관리
+- 공통 에러 핸들링
+- TypeScript를 활용한 타입 안전성 보장
+- `Promise.allSettled`를 활용한 병렬 API 호출 및 부분 실패 처리
+
+### 에러 핸들링 및 토스트 UI
+
+- shadcn/ui 기반 Toast 컴포넌트를 활용한 사용자 피드백
+- API 오류 발생 시 토스트 알림으로 에러 메시지 표시
+- `use-toast` 커스텀 훅을 통한 토스트 상태 관리
+
+### 상태 관리
+
+- React Hooks (useState, useEffect, useMemo)를 활용한 로컬 상태 관리
+- 검색 필터와 실제 적용된 필터 분리로 UX 개선
+- useMemo를 활용한 필터링 및 페이지네이션 최적화
+
+### 코드 관리
+
+- TypeScript를 활용한 타입 안전성
+- 도메인별 순수 함수 분리 (utils/helpers)
+- 상수 관리 및 타입 정의 분리
+- 컴포넌트 단위 모듈화
+
+### 날짜 포맷팅
+
+- API 응답 날짜를 `YYYY-MM-DD HH:mm:ss` 형식으로 통일
+
+## 환경 변수
+
+```
+VITE_API_BASE_URL=https://recruit.paysbypays.com/api/v1
 ```
